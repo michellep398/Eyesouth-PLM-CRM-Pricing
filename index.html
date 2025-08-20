@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promptly Suite - Pricing Presentation & Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-in;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: white;
+            border: none;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 0 10px 10px 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .current-pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .client-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .client-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        
+        .client-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .total-row {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid #667eea;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .package-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .package-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .package-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+        
+        .package-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .package-price {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .package-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .package-note {
+            background: #f7fafc;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #4a5568;
+            margin-top: 10px;
+        }
+        
+        .calculator-form {
+            background: #f7fafc;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .form-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .brand-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group select option:disabled {
+            color: #999;
+            background: #f5f5f5;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .checkbox-item:hover {
+            border-color: #667eea;
+            background: #f7f3ff;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .checkbox-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #718096;
+        }
+        
+        .results {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .results h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        
+        .result-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .result-total {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .warning {
+            background: #fed7d7;
+            color: #9b2c2c;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .info-box {
+            background: #bee3f8;
+            color: #2c5282;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Promptly Suite Pricing & Calculator</h1>
+            <p>Comprehensive pricing overview and package builder</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showSection('current')">Current Client Pricing</button>
+            <button class="tab" onclick="showSection('packages')">Available Packages</button>
+            <button class="tab" onclick="showSection('calculator')">Pricing Calculator</button>
+        </div>
+        
+        <div class="content">
+            <!-- Current Client Pricing Section -->
+            <div id="current" class="section active">
+                <h2>Current Client Monthly Pricing</h2>
+                <div class="current-pricing-grid">
+                    <div class="client-card">
+                        <div class="client-name">AEI - Atlantic Eye Institute</div>
+                        <div class="service-item">
+                            <span>PLM - Full</span>
+                            <span>$499.00</span>
+                        </div>
+                        <div class="service-item">
+                            <span>CRM - Full</span>
+                            <span>$549.00</span>
+                        </div>
+                        <div class="service-item">
+                            <span>PM Connect - Mod Med</span>
+                            <span>$250.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$1,298.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">ECSA - Eye Center of St. Augustine</div>
+                        <div class="service-item">
+                            <span>PLM - Full</span>
+                            <span>$499.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$499.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">URMA - University Retina</div>
+                        <div class="service-item">
+                            <span>PLM - Full</span>
+                            <span>$499.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$499.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">KEI - Kentucky Eye Institute</div>
+                        <div class="service-item">
+                            <span>PLM - Basic</span>
+                            <span>$199.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$199.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">GCS - Georgia Center for Sight</div>
+                        <div class="service-item">
+                            <span>PLM - Full</span>
+                            <span>$499.00</span>
+                        </div>
+                        <div class="service-item">
+                            <span>PM Connect - Select</span>
+                            <span>$250.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$749.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">GEA - Georgia Eye Associates</div>
+                        <div class="service-item">
+                            <span>PLM - Full</span>
+                            <span>$499.00</span>
+                        </div>
+                        <div class="service-item">
+                            <span>CRM - Full</span>
+                            <span>$549.00</span>
+                        </div>
+                        <div class="service-item">
+                            <span>PM Connect - Select</span>
+                            <span>$250.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$1,298.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">NGEA - North Georgia Eye Associates</div>
+                        <div class="service-item">
+                            <span>PLM - Full</span>
+                            <span>$499.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$499.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">GEP - Georgia Eye Partners</div>
+                        <div class="service-item">
+                            <span>PLM - Full</span>
+                            <span>$499.00</span>
+                        </div>
+                        <div class="service-item">
+                            <span>CRM - Full</span>
+                            <span>$549.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$1,048.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">SGEP - South Georgia Eye Partners</div>
+                        <div class="service-item">
+                            <span>PLM - Full</span>
+                            <span>$499.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$499.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">CEC - Clayton Eye Center</div>
+                        <div class="service-item">
+                            <span>PLM - Basic</span>
+                            <span>$199.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$199.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">RII - Retina Institute of Illinois</div>
+                        <div class="service-item">
+                            <span>PLM - Full</span>
+                            <span>$499.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$499.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">FEMI - Florida Eye Microsurgical Institute</div>
+                        <div class="service-item">
+                            <span>PLM - Basic</span>
+                            <span>$199.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$199.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">MWEC - Midwest Eye Center</div>
+                        <div class="service-item">
+                            <span>PLM - Basic</span>
+                            <span>$199.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$199.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">CAEI - Chicago Arbor Eye Institute</div>
+                        <div class="service-item">
+                            <span>PLM - Full</span>
+                            <span>$499.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$499.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">CFES - Central Florida Eye Specialists</div>
+                        <div class="service-item">
+                            <span>PLM - Basic</span>
+                            <span>$199.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$199.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">ECT - Eye Center of Texas</div>
+                        <div class="service-item">
+                            <span>PLM - Full</span>
+                            <span>$499.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$499.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">GAR - Georgia Retina</div>
+                        <div class="service-item">
+                            <span>PLM - Basic</span>
+                            <span>$199.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$199.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card">
+                        <div class="client-name">Cookville/Cumberland</div>
+                        <div class="service-item">
+                            <span>PLM - Basic</span>
+                            <span>$199.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$199.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-card" style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);">
+                        <div class="client-name">Eye South Partner</div>
+                        <div class="service-item">
+                            <span>PM Connect - Practice Plus</span>
+                            <span>$250.00</span>
+                        </div>
+                        <div class="package-note" style="margin-top: 10px; background: rgba(255,255,255,0.7);">
+                            <strong>Enterprise Coverage:</strong> This single fee covers ALL practices under the Enterprise Plus account
+                        </div>
+                        <div class="total-row">
+                            <span>Monthly Total:</span>
+                            <span>$250.00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-box" style="margin-top: 30px;">
+                    <h3>PM Connect Pricing Structure</h3>
+                    <p><strong>Nextech Plus:</strong> $250/month covers ALL Enterprise Nextech Plus accounts</p>
+                    <p><strong>Nextech Select:</strong> $250/month per instance</p>
+                    <p><strong>Mod Med:</strong> $250/month per instance</p>
+                </div>
+            </div>
+            
+            <!-- Packages Section -->
+            <div id="packages" class="section">
+                <h2>Available Packages & Pricing</h2>
+                
+                <div class="info-box">
+                    <h3>Setup Fees & Terms</h3>
+                    <p><strong>12-Month Terms:</strong> Setup fees apply per brand</p>
+                    <p>• PLM Package: $500 one-time setup fee</p>
+                    <p>• CRM Package: $1,999 one-time setup fee</p>
+                    <p><strong>36-Month Terms:</strong> All setup fees waived!</p>
+                </div>
+                
+                <div class="package-grid">
+                    <div class="package-card">
+                        <div class="package-name">Promptly PLM - Basic</div>
+                        <div class="package-price">$199/month</div>
+                        <div class="package-description">
+                            Physician Liaison Outreach tool for streamlined referral management
+                        </div>
+                        <div class="package-note">
+                            <strong>Formerly:</strong> Referify<br>
+                            <strong>Setup:</strong> $500 (12-month) or FREE (36-month)
+                        </div>
+                    </div>
+                    
+                    <div class="package-card">
+                        <div class="package-name">Promptly PLM - Full</div>
+                        <div class="package-price">$499/month</div>
+                        <div class="package-description">
+                            Complete Physician Liaison Outreach tool with integrated Portal for enhanced collaboration
+                        </div>
+                        <div class="package-note">
+                            <strong>Formerly:</strong> Referify w/ Portal<br>
+                            <strong>Note:</strong> Not the Promptly Referral Portal<br>
+                            <strong>Setup:</strong> $500 (12-month) or FREE (36-month)
+                        </div>
+                    </div>
+                    
+                    <div class="package-card" style="border: 3px solid #e53e3e;">
+                        <div class="package-name">Promptly CRM - Lite</div>
+                        <div class="package-price">$399/month</div>
+                        <div class="package-description">
+                            <strong style="color: #e53e3e;">⚠️ ADD-ON ONLY:</strong> This is ONLY available as an add-on to Promptly PLM - Full. Used EXCLUSIVELY for managing referred patients from Referify/PLM system. NO other lead sources.
+                        </div>
+                        <div class="package-note" style="background: #fed7d7;">
+                            <strong style="color: #9b2c2c;">STRICT REQUIREMENT:</strong> Must have PLM Full (with Portal)<br>
+                            <strong>Use Case:</strong> ONLY for Referify-generated referrals<br>
+                            <strong>If you need other lead sources:</strong> Choose CRM Full instead<br>
+                            <strong>Setup:</strong> $1,999 (12-month) or FREE (36-month)
+                        </div>
+                    </div>
+                    
+                    <div class="package-card">
+                        <div class="package-name">Promptly CRM - Full</div>
+                        <div class="package-price">$549/month</div>
+                        <div class="package-description">
+                            Complete MDprospects platform with full features: scheduling, appointment types, automated emails/SMS, digital lead generation, email funnels, 2-way SMS, and comprehensive lead tracking from ALL sources
+                        </div>
+                        <div class="package-note">
+                            <strong>Standalone:</strong> No prerequisites required<br>
+                            <strong>Lead Sources:</strong> ALL sources (not limited to Referify)<br>
+                            <strong>Note:</strong> Choose either CRM Lite or CRM Full, not both<br>
+                            <strong>Setup:</strong> $1,999 (12-month) or FREE (36-month)
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 40px; padding: 15px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 8px;">
+                    PM Connect - Practice Management System Sync
+                </h3>
+                <p style="margin: 15px 0; color: #4a5568; font-style: italic;">
+                    Monthly Pricing for Syncing with Practice Management System. Number of instances dependent on if Enterprise or PM per brand.
+                </p>
+                
+                <div class="package-grid">
+                    <div class="package-card">
+                        <div class="package-name">PM Connect - Nextech Practice Plus/Enterprise</div>
+                        <div class="package-price">$250/month</div>
+                        <div class="package-description">
+                            Single fee covers ALL Plus accounts across your enterprise
+                        </div>
+                        <div class="package-note">
+                            <strong>Pricing:</strong> One flat fee for unlimited Plus accounts<br>
+                            <strong>Best for:</strong> Multi-location practices with Plus
+                        </div>
+                    </div>
+                    
+                    <div class="package-card">
+                        <div class="package-name">PM Connect - Nextech Select</div>
+                        <div class="package-price">$250/month</div>
+                        <div class="package-description">
+                            Integration with Nextech Select practice management system
+                        </div>
+                        <div class="package-note">
+                            <strong>Pricing:</strong> Per instance of Nextech Select<br>
+                            <strong>Example:</strong> 3 instances = $750/month
+                        </div>
+                    </div>
+                    
+                    <div class="package-card">
+                        <div class="package-name">PM Connect - Mod Med</div>
+                        <div class="package-price">$250/month</div>
+                        <div class="package-description">
+                            Integration with ModMed practice management system
+                        </div>
+                        <div class="package-note">
+                            <strong>Pricing:</strong> Per instance of Mod Med<br>
+                            <strong>Example:</strong> 2 instances = $500/month
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Calculator Section -->
+            <div id="calculator" class="section">
+                <h2>Package Pricing Calculator</h2>
+                
+                <div class="calculator-form">
+                    <div class="form-section">
+                        <h3>Contract Terms</h3>
+                        <div class="form-group">
+                            <label>Select Contract Length:</label>
+                            <select id="contractTerm" onchange="updateCalculation()">
+                                <option value="12">12 Months (Setup fees apply)</option>
+                                <option value="36">36 Months (Setup fees waived)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>Number of Brands/Locations</h3>
+                        <div class="form-group">
+                            <label>How many brands/locations do you need to set up?</label>
+                            <input type="number" id="numBrands" value="1" min="1" onchange="generateBrandForms()">
+                        </div>
+                    </div>
+                    
+                    <div id="brandForms"></div>
+                    
+                    <div class="form-section">
+                        <button class="btn" onclick="calculateTotal()">Calculate Total Pricing</button>
+                        <button class="btn btn-secondary" onclick="resetCalculator()">Reset Calculator</button>
+                    </div>
+                    
+                    <div id="warning" class="warning"></div>
+                    
+                    <div id="results" class="results" style="display: none;">
+                        <h3>Pricing Summary</h3>
+                        <div id="resultDetails"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+        
+        function generateBrandForms() {
+            const numBrands = parseInt(document.getElementById('numBrands').value);
+            const container = document.getElementById('brandForms');
+            container.innerHTML = '';
+            
+            for (let i = 1; i <= numBrands; i++) {
+                const brandDiv = document.createElement('div');
+                brandDiv.className = 'brand-item';
+                brandDiv.innerHTML = `
+                    <h4>Brand/Location ${i}</h4>
+                    <div class="form-group">
+                        <label>Brand Name:</label>
+                        <input type="text" id="brandName${i}" placeholder="Enter brand name">
+                    </div>
+                    <div class="form-group">
+                        <label>Select Services:</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="plmBasic${i}" onchange="validatePackages(${i})">
+                                <label for="plmBasic${i}">PLM Basic ($199/mo)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="plmFull${i}" onchange="validatePackages(${i})">
+                                <label for="plmFull${i}">PLM Full w/ Portal ($499/mo)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="crmLite${i}" onchange="validatePackages(${i})">
+                                <label for="crmLite${i}">CRM Lite ($399/mo)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="crmFull${i}" onchange="validatePackages(${i})">
+                                <label for="crmFull${i}">CRM Full ($549/mo)</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>PM Connect System:</label>
+                        <select id="pmConnect${i}">
+                            <option value="none">None</option>
+                            <option value="nextechPlus" disabled style="color: #999;">Nextech Plus - Already billed for Enterprise ($250/mo total)</option>
+                            <option value="nextechSelect">Nextech Select ($250/mo per instance)</option>
+                            <option value="modMed">Mod Med ($250/mo per instance)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="pmInstances${i}" style="display: none;">
+                        <label>Number of PM Instances:</label>
+                        <input type="number" id="pmInstanceCount${i}" value="1" min="1">
+                    </div>
+                `;
+                container.appendChild(brandDiv);
+                
+                // Add event listener for PM Connect selection
+                document.getElementById(`pmConnect${i}`).addEventListener('change', function() {
+                    const instanceDiv = document.getElementById(`pmInstances${i}`);
+                    if (this.value === 'nextechSelect' || this.value === 'modMed') {
+                        instanceDiv.style.display = 'block';
+                    } else {
+                        instanceDiv.style.display = 'none';
+                    }
+                });
+            }
+        }
+        
+        function validatePackages(brandNum) {
+            const plmBasic = document.getElementById(`plmBasic${brandNum}`);
+            const plmFull = document.getElementById(`plmFull${brandNum}`);
+            const crmLite = document.getElementById(`crmLite${brandNum}`);
+            const crmFull = document.getElementById(`crmFull${brandNum}`);
+            const warning = document.getElementById('warning');
+            
+            // Can't have both PLM Basic and PLM Full
+            if (plmBasic.checked && plmFull.checked) {
+                plmBasic.checked = false;
+                warning.textContent = 'You can only select either PLM Basic OR PLM Full, not both.';
+                warning.style.display = 'block';
+                setTimeout(() => warning.style.display = 'none', 3000);
+            }
+            
+            // CRM Lite requires PLM Full
+            if (crmLite.checked && !plmFull.checked) {
+                crmLite.checked = false;
+                warning.textContent = 'CRM Lite requires PLM Full (with Portal). Please select PLM Full first.';
+                warning.style.display = 'block';
+                setTimeout(() => warning.style.display = 'none', 5000);
+            }
+            
+            // Can't have both CRM Lite and CRM Full - choose one
+            if (crmFull.checked && crmLite.checked) {
+                // If CRM Full was just checked, uncheck CRM Lite
+                if (event.target.id === `crmFull${brandNum}`) {
+                    crmLite.checked = false;
+                    warning.textContent = 'You can only select either CRM Lite OR CRM Full, not both. CRM Lite has been deselected.';
+                } else {
+                    // If CRM Lite was just checked, uncheck CRM Full
+                    crmFull.checked = false;
+                    warning.textContent = 'You can only select either CRM Lite OR CRM Full, not both. CRM Full has been deselected.';
+                }
+                warning.style.display = 'block';
+                setTimeout(() => warning.style.display = 'none', 3000);
+            }
+        }
+        
+        function calculateTotal() {
+            const numBrands = parseInt(document.getElementById('numBrands').value);
+            const contractTerm = parseInt(document.getElementById('contractTerm').value);
+            const results = document.getElementById('results');
+            const resultDetails = document.getElementById('resultDetails');
+            
+            let totalMonthly = 0;
+            let totalSetup = 0;
+            let detailsHTML = '';
+            
+            for (let i = 1; i <= numBrands; i++) {
+                const brandName = document.getElementById(`brandName${i}`).value || `Brand ${i}`;
+                const plmBasic = document.getElementById(`plmBasic${i}`).checked;
+                const plmFull = document.getElementById(`plmFull${i}`).checked;
+                const crmLite = document.getElementById(`crmLite${i}`).checked;
+                const crmFull = document.getElementById(`crmFull${i}`).checked;
+                const pmConnect = document.getElementById(`pmConnect${i}`).value;
+                
+                let brandMonthly = 0;
+                let brandSetup = 0;
+                let services = [];
+                
+                if (plmBasic) {
+                    brandMonthly += 199;
+                    services.push('PLM Basic: $199/mo');
+                    if (contractTerm === 12) brandSetup += 500;
+                }
+                
+                if (plmFull) {
+                    brandMonthly += 499;
+                    services.push('PLM Full: $499/mo');
+                    if (contractTerm === 12) brandSetup += 500;
+                }
+                
+                if (crmLite) {
+                    brandMonthly += 399;
+                    services.push('CRM Lite: $399/mo');
+                    if (contractTerm === 12) brandSetup += 1999;
+                }
+                
+                if (crmFull) {
+                    brandMonthly += 549;
+                    services.push('CRM Full: $549/mo');
+                    if (contractTerm === 12) brandSetup += 1999;
+                }
+                
+                if (pmConnect !== 'none' && pmConnect !== 'nextechPlus') {
+                    const instances = parseInt(document.getElementById(`pmInstanceCount${i}`).value);
+                    const pmCost = 250 * instances;
+                    brandMonthly += pmCost;
+                    const pmName = pmConnect === 'nextechSelect' ? 'Nextech Select' : 'Mod Med';
+                    services.push(`PM Connect - ${pmName}: ${pmCost}/mo (${instances} instance${instances > 1 ? 's' : ''})`);
+                }
+                
+                if (services.length > 0) {
+                    detailsHTML += `
+                        <div class="result-item">
+                            <h4>${brandName}</h4>
+                            ${services.map(s => `<div>• ${s}</div>`).join('')}
+                            ${contractTerm === 12 && brandSetup > 0 ? `<div>• Setup Fee: $${brandSetup.toLocaleString()}</div>` : ''}
+                            <div style="margin-top: 10px;"><strong>Brand Monthly Total: $${brandMonthly.toLocaleString()}</strong></div>
+                        </div>
+                    `;
+                }
+                
+                totalMonthly += brandMonthly;
+                totalSetup += brandSetup;
+            }
+            
+            if (totalMonthly > 0) {
+                const annualTotal = totalMonthly * 12;
+                const contractTotal = totalMonthly * contractTerm;
+                
+                detailsHTML += `
+                    <div class="result-total">
+                        <div>Contract Terms: ${contractTerm} months</div>
+                        ${totalSetup > 0 ? `<div>Total Setup Fees: $${totalSetup.toLocaleString()}</div>` : '<div>Setup Fees: WAIVED (36-month contract)</div>'}
+                        <div style="font-size: 1.5em; margin-top: 10px;">Monthly Total: $${totalMonthly.toLocaleString()}</div>
+                        <div style="font-size: 1.3em;">Annual Total: $${annualTotal.toLocaleString()}</div>
+                        <div style="font-size: 1.3em;">Contract Total: $${(contractTotal + totalSetup).toLocaleString()}</div>
+                    </div>
+                `;
+                
+                resultDetails.innerHTML = detailsHTML;
+                results.style.display = 'block';
+            } else {
+                const warning = document.getElementById('warning');
+                warning.textContent = 'Please select at least one service to calculate pricing.';
+                warning.style.display = 'block';
+                setTimeout(() => warning.style.display = 'none', 3000);
+            }
+        }
+        
+        function resetCalculator() {
+            document.getElementById('numBrands').value = 1;
+            document.getElementById('contractTerm').value = '12';
+            generateBrandForms();
+            document.getElementById('results').style.display = 'none';
+        }
+        
+        function updateCalculation() {
+            const results = document.getElementById('results');
+            if (results.style.display === 'block') {
+                calculateTotal();
+            }
+        }
+        
+        // Initialize with one brand form
+        generateBrandForms();
+    </script>
+</body>
+</html>
