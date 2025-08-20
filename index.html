@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promptly Package Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f9fafb;
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 0.75rem;
+            color: #2563eb;
+        }
+
+        h1 {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        h3 {
+            font-size: 1.125rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        h4 {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        }
+
+        .section-blue {
+            background-color: #eff6ff;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .section-green {
+            background-color: #f0fdf4;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .section-purple {
+            background-color: #faf5ff;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .section-gray {
+            background-color: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-yellow {
+            background-color: #fefce8;
+            border: 1px solid #fde047;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .package-item {
+            border-left: 4px solid;
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .package-item.blue {
+            border-color: #93c5fd;
+        }
+
+        .package-item.green {
+            border-color: #86efac;
+        }
+
+        .package-item.purple {
+            border-color: #d8b4fe;
+        }
+
+        .package-item p {
+            font-size: 0.875rem;
+            color: #4b5563;
+            margin-bottom: 0.5rem;
+        }
+
+        .price {
+            font-size: 1.125rem;
+            font-weight: bold;
+        }
+
+        .price.blue {
+            color: #2563eb;
+        }
+
+        .price.green {
+            color: #16a34a;
+        }
+
+        .price.purple {
+            color: #9333ea;
+        }
+
+        .client-item {
+            background: white;
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 0.5rem;
+        }
+
+        .client-name {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.875rem;
+        }
+
+        .client-packages {
+            font-size: 0.75rem;
+            color: #4b5563;
+        }
+
+        .client-note {
+            font-size: 0.75rem;
+            color: #2563eb;
+            font-style: italic;
+        }
+
+        .client-price {
+            color: #16a34a;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .client-price.purple {
+            color: #9333ea;
+        }
+
+        .clients-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-label input[type="checkbox"] {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.75rem;
+        }
+
+        .form-label span {
+            font-size: 0.875rem;
+        }
+
+        .form-label.disabled span {
+            color: #9ca3af;
+        }
+
+        .form-input {
+            width: 5rem;
+            padding: 0.25rem 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+        }
+
+        .divider {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .result-card {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+
+        .result-card.blue {
+            background-color: #eff6ff;
+        }
+
+        .result-card.green {
+            background-color: #f0fdf4;
+        }
+
+        .result-card.yellow {
+            background-color: #fefce8;
+        }
+
+        .result-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-title.blue {
+            color: #1e40af;
+        }
+
+        .result-title.green {
+            color: #15803d;
+        }
+
+        .result-title.yellow {
+            color: #a16207;
+        }
+
+        .result-value {
+            font-size: 1.875rem;
+            font-weight: bold;
+        }
+
+        .result-value.blue {
+            color: #2563eb;
+        }
+
+        .result-value.green {
+            color: #16a34a;
+        }
+
+        .result-value.yellow {
+            color: #ca8a04;
+        }
+
+        .result-note {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .result-note.yellow {
+            color: #a16207;
+        }
+
+        .error-box {
+            background-color: #fef2f2;
+            border: 1px solid #fca5a5;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .warning-box {
+            background-color: #fefce8;
+            border: 1px solid #fde047;
+            color: #a16207;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .error-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-list {
+            margin-left: 1rem;
+            list-style-type: disc;
+        }
+
+        .notes-list {
+            font-size: 0.875rem;
+            color: #a16207;
+            margin-left: 1rem;
+            list-style-type: disc;
+        }
+
+        .notes-list li {
+            margin-bottom: 0.25rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 0.5rem;
+        }
+
+        .blue-icon {
+            color: #2563eb;
+        }
+
+        .green-icon {
+            color: #16a34a;
+        }
+
+        .purple-icon {
+            color: #9333ea;
+        }
+
+        .yellow-icon {
+            color: #a16207;
+        }
+
+        .header-title {
+            color: #1f2937;
+        }
+
+        .blue-header {
+            color: #1e40af;
+        }
+
+        .green-header {
+            color: #15803d;
+        }
+
+        .purple-header {
+            color: #7c3aed;
+        }
+
+        .yellow-header {
+            color: #a16207;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .checkbox-group input {
+            margin-right: 0.5rem;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <svg class="header-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                </svg>
+                <h1>Promptly Package Calculator</h1>
+            </div>
+
+            <!-- Package Definitions -->
+            <div style="margin-bottom: 2rem;">
+                <div class="section-header">
+                    <svg class="section-icon blue-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                    <h2 class="header-title">Package Definitions</h2>
+                </div>
+                <div class="grid grid-3">
+                    <!-- PLM Section -->
+                    <div class="section-blue">
+                        <h3 class="blue-header">Promptly PLM (Formerly Referify)</h3>
+                        <div class="package-item blue">
+                            <h4>Promptly PLM - Basic</h4>
+                            <p>Formerly Referify. Basic patient lifecycle management.</p>
+                            <p class="price blue">$199/month</p>
+                        </div>
+                        <div class="package-item blue">
+                            <h4>Promptly PLM - Full</h4>
+                            <p>Formerly Referify & Referify Portal. Complete patient lifecycle management with portal access.</p>
+                            <p class="price blue">$499/month</p>
+                        </div>
+                    </div>
+
+                    <!-- CRM Section -->
+                    <div class="section-green">
+                        <h3 class="green-header">Promptly CRM (Formerly MDprospects)</h3>
+                        <div class="package-item green">
+                            <h4>Promptly CRM - Lite</h4>
+                            <p>Formerly MDprospects Lite. Reports, first contact auto email, and patient management for PLM referrals only. Must be added to PLM Full. Limited to PLM leads - no digital leads, email funnels, 2-way SMS, or tracking beyond PLM patients.</p>
+                            <p class="price green">$399/month</p>
+                        </div>
+                        <div class="package-item green">
+                            <h4>Promptly CRM - Full (Standalone)</h4>
+                            <p>Complete MDprospects platform with full features: scheduling, appointment types, automated emails/SMS, digital lead generation, email funnels, 2-way SMS, and comprehensive patient tracking. Use when managing leads beyond just PLM referrals.</p>
+                            <p class="price green">$549/month</p>
+                        </div>
+                    </div>
+
+                    <!-- PM Connect Section -->
+                    <div class="section-purple">
+                        <h3 class="purple-header">PM System Connect</h3>
+                        <div class="package-item purple">
+                            <h4>PM Connect - Plus</h4>
+                            <p>Monthly fee per PM system instance. Covers all brands under Practice Plus Enterprise. <strong>Only one instance needed per enterprise.</strong></p>
+                            <p class="price purple">$250/month</p>
+                        </div>
+                        <div class="package-item purple">
+                            <h4>PM Connect - Select</h4>
+                            <p>Monthly fee per instance of Nextech Select.</p>
+                            <p class="price purple">$250/month</p>
+                        </div>
+                        <div class="package-item purple">
+                            <h4>PM Connect - Mod Med</h4>
+                            <p>Monthly fee per instance of Mod Med.</p>
+                            <p class="price purple">$250/month</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Clients -->
+            <div class="grid grid-2" style="margin-bottom: 2rem;">
+                <div class="section-green">
+                    <div class="section-header">
+                        <svg class="section-icon green-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                        <h2 class="header-title">Current Clients</h2>
+                    </div>
+                    <div class="clients-container" id="currentClients">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="section-purple">
+                    <div class="section-header">
+                        <svg class="section-icon purple-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                        <h2 class="header-title">PM Connect Clients</h2>
+                    </div>
+                    <div id="pmConnectClients">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculator -->
+            <div class="section-gray">
+                <h2 class="section-header">
+                    <svg class="section-icon green-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                    </svg>
+                    Package Calculator
+                </h2>
+
+                <!-- 36-Month Terms Option -->
+                <div style="margin-bottom: 1.5rem; padding: 1rem; background-color: #fefce8; border: 1px solid #fde047; border-radius: 0.5rem;">
+                    <label style="display: flex; align-items: center;">
+                        <input type="checkbox" id="thirtySixMonthTerms" onchange="handleTermsChange(this.checked)" style="width: 1rem; height: 1rem; margin-right: 0.75rem;">
+                        <span style="font-size: 0.875rem; font-weight: 600; color: #a16207;">
+                            36-Month Contract Terms (waives all setup fees)
+                        </span>
+                    </label>
+                </div>
+
+                <div class="grid grid-2">
+                    <div>
+                        <h3>PLM Packages</h3>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <label class="input-label">Promptly PLM - Basic ($199/month per instance)</label>
+                            <input type="number" min="0" value="0" id="plmBasic" class="form-input" onchange="handlePackageChange('plmBasic', parseInt(this.value) || 0)">
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <label class="input-label">Promptly PLM - Full ($499/month per instance)</label>
+                            <input type="number" min="0" value="0" id="plmFull" class="form-input" onchange="handlePackageChange('plmFull', parseInt(this.value) || 0)">
+                        </div>
+
+                        <h3 style="padding-top: 1rem;">CRM Packages</h3>
+                        
+                        <div style="margin-bottom: 1rem;" id="crmLiteContainer">
+                            <label class="input-label" id="crmLiteLabel">Promptly CRM - Lite ($399/month per instance) *Requires PLM Full</label>
+                            <input type="number" min="0" value="0" id="crmLite" class="form-input" onchange="handlePackageChange('crmLite', parseInt(this.value) || 0)">
+                        </div>
+
+                        <div class="divider">
+                            <div style="margin-bottom: 1rem;" id="crmFullStandaloneContainer">
+                                <label class="input-label" id="crmFullStandaloneLabel">Promptly CRM - Full Standalone ($549/month per instance) *Without PLM</label>
+                                <input type="number" min="0" value="0" id="crmFullStandalone" class="form-input" onchange="handlePackageChange('crmFullStandalone', parseInt(this.value) || 0)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3>PM Connect (Instances)</h3>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <label class="input-label">PM Connect - Plus ($250/instance) *Covers entire enterprise</label>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="pmConnectPlus" onchange="handlePackageChange('pmConnectPlus', this.checked ? 1 : 0)">
+                                <span style="font-size: 0.875rem;">One instance covers all brands</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <label class="input-label">PM Connect - Select ($250/instance)</label>
+                            <input type="number" min="0" value="0" id="pmConnectSelect" class="form-input" onchange="handlePackageChange('pmConnectSelect', parseInt(this.value) || 0)">
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <label class="input-label">PM Connect - Mod Med ($250/instance)</label>
+                            <input type="number" min="0" value="0" id="pmConnectModMed" class="form-input" onchange="handlePackageChange('pmConnectModMed', parseInt(this.value) || 0)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div style="background: white; border: 2px solid #93c5fd; border-radius: 0.5rem; padding: 1.5rem;">
+                <h2 style="margin-bottom: 1rem; color: #1f2937;">Pricing Summary</h2>
+                
+                <div id="errorContainer" style="display: none;">
+                    <!-- Error messages populated by JavaScript -->
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-card blue">
+                        <h3 class="result-title blue">Monthly Total</h3>
+                        <p class="result-value blue" id="monthlyTotal">$0</p>
+                    </div>
+
+                    <div class="result-card green">
+                        <h3 class="result-title green">Annual Total</h3>
+                        <p class="result-value green" id="annualTotal">$0</p>
+                    </div>
+
+                    <div class="result-card yellow" id="setupFeesCard" style="display: none;">
+                        <h3 class="result-title yellow">Setup Fees</h3>
+                        <p class="result-value yellow" id="setupTotal">$0</p>
+                        <p class="result-note yellow" id="setupNote">One-time charge</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Important Notes -->
+            <div class="section-yellow">
+                <h3 class="yellow-header">Important Notes:</h3>
+                <ul class="notes-list">
+                    <li>Multiple instances allowed for all packages (useful for multiple locations/brands)</li>
+                    <li>PLM Basic: $199/month per instance - basic patient lifecycle management</li>
+                    <li>PLM Full: $499/month per instance - complete PLM with portal access</li>
+                    <li>CRM Lite: $399/month per instance - requires PLM Full, limited to PLM referral patients only</li>
+                    <li>CRM Full Standalone: $549/month per instance - complete MDprospects platform, use when managing leads beyond PLM referrals</li>
+                    <li>CRM Lite and CRM Full Standalone serve different purposes - typically use one or the other</li>
+                    <li>PM Connect - Plus: $250/month covers ALL brands in the enterprise (only one instance needed)</li>
+                    <li>PM Connect - Select/Mod Med: $250/month per individual instance</li>
+                    <li>Setup fees: PLM ($500 per instance), CRM ($1,650 per instance) - one-time charges</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Package state
+        let selectedPackages = {
+            plmBasic: 0,
+            plmFull: 0,
+            crmLite: 0,
+            crmFullStandalone: 0,
+            pmConnectPlus: 0,
+            pmConnectSelect: 0,
+            pmConnectModMed: 0
+        };
+
+        // Package pricing
+        const packages = {
+            plmBasic: { price: 199 },
+            plmFull: { price: 499 },
+            crmLite: { price: 399 },
+            crmFullStandalone: { price: 549 },
+            pmConnectPlus: { price: 250 },
+            pmConnectSelect: { price: 250 },
+            pmConnectModMed: { price: 250 }
+        };
+
+        const setupFees = {
+            crmSetup: 1650,
+            plmSetup: 500
+        };
+
+        // Client data
+        const currentClients = [
+            { name: 'AEI - Atlantic Eye Institute', packages: ['PLM Full', 'CRM Full Standalone'], monthly: 1048 },
+            { name: 'ECSA - Eye Center of St. Augustine', packages: ['PLM Full'], monthly: 499 },
+            { name: 'URMA - University Retina', packages: ['PLM Full'], monthly: 499 },
+            { name: 'KEI - Kentucky Eye Institute', packages: ['PLM Basic'], monthly: 199, note: 'In process implementing Promptly Suite' },
+            { name: 'GCS - Georgia Center for Sight', packages: ['PLM Full'], monthly: 499 },
+            { name: 'GEA - Georgia Eye Associates', packages: ['PLM Full', 'CRM Full Standalone'], monthly: 1048 },
+            { name: 'NGEA - North Georgia Eye Associates', packages: ['PLM Full'], monthly: 499 },
+            { name: 'GEP - Georgia Eye Partners', packages: ['PLM Full', 'CRM Full Standalone'], monthly: 1048 },
+            { name: 'SGEP - South Georgia Eye Partners', packages: ['PLM Full'], monthly: 499 },
+            { name: 'CEC - Clayton Eye Center', packages: ['PLM Basic'], monthly: 199 },
+            { name: 'RII - Retina Institute of Illinois', packages: ['PLM Full'], monthly: 499 },
+            { name: 'FEMI - Florida Eye Microsurgical Institute', packages: ['PLM Basic'], monthly: 199 },
+            { name: 'MWEC - Midwest Eye Center', packages: ['PLM Basic'], monthly: 199, note: 'On Promptly Suite' },
+            { name: 'CAEI - Chicago Arbor Eye Institute', packages: ['PLM Full'], monthly: 499 },
+            { name: 'CFES - Central Florida Eye Specialists', packages: ['PLM Basic'], monthly: 199, note: 'On Promptly Suite' },
+            { name: 'ECT - Eye Center of Texas', packages: ['PLM Full'], monthly: 499 },
+            { name: 'GAR - Georgia Retina', packages: ['PLM Basic'], monthly: 199 },
+            { name: 'Cookville/Cumberland', packages: ['PLM Basic'], monthly: 199 }
+        ];
+
+        const pmConnectClients = [
+            { name: 'Nextech Plus', description: '$250/month covers all Enterprise Nextech Plus accounts' },
+            { name: 'Atlantic Eye Institute', description: 'PM Connect - Mod Med $250 per instance' },
+            { name: 'Georgia Center for Sight', description: 'PM Connect - Select $250 per instance' },
+            { name: 'Georgia Eye Associates', description: 'PM Connect - Select $250 per instance' }
+        ];
+
+        function handleTermsChange(checked) {
+            thirtySixMonthTerms = checked;
+            calculatePricing();
+        }
+
+        function handlePackageChange(packageKey, value) {
+            selectedPackages[packageKey] = value;
+            
+            // Handle CRM dependencies and exclusivity
+            const hasPLMFull = selectedPackages.plmFull > 0;
+            const hasPLM = selectedPackages.plmBasic > 0 || selectedPackages.plmFull > 0;
+            
+            // If PLM Full is reduced to 0, reset CRM Lite to 0
+            if (packageKey === 'plmFull' && value === 0) {
+                selectedPackages.crmLite = 0;
+                document.getElementById('crmLite').value = 0;
+            }
+            
+            updateUI();
+            calculatePricing();
+        }
+
+        function updateUI() {
+            const hasPLMFull = selectedPackages.plmFull > 0;
+            const hasPLM = selectedPackages.plmBasic > 0 || selectedPackages.plmFull > 0;
+            
+            // Update CRM Lite availability
+            const crmLiteInput = document.getElementById('crmLite');
+            const crmLiteLabel = document.getElementById('crmLiteLabel');
+            const crmLiteContainer = document.getElementById('crmLiteContainer');
+            
+            if (!hasPLMFull) {
+                crmLiteInput.disabled = true;
+                crmLiteContainer.style.opacity = '0.5';
+                crmLiteLabel.style.color = '#9ca3af';
+            } else {
+                crmLiteInput.disabled = false;
+                crmLiteContainer.style.opacity = '1';
+                crmLiteLabel.style.color = '';
+            }
+            
+            // Update CRM Full Standalone availability - show warning but don't disable
+            const crmFullStandaloneInput = document.getElementById('crmFullStandalone');
+            const crmFullStandaloneLabel = document.getElementById('crmFullStandaloneLabel');
+            const crmFullStandaloneContainer = document.getElementById('crmFullStandaloneContainer');
+            
+            if (hasPLM && selectedPackages.crmFullStandalone > 0) {
+                crmFullStandaloneContainer.style.backgroundColor = '#fef2f2';
+                crmFullStandaloneContainer.style.border = '1px solid #fca5a5';
+                crmFullStandaloneContainer.style.borderRadius = '0.25rem';
+                crmFullStandaloneContainer.style.padding = '0.5rem';
+            } else {
+                crmFullStandaloneContainer.style.backgroundColor = '';
+                crmFullStandaloneContainer.style.border = '';
+                crmFullStandaloneContainer.style.padding = '';
+            }
+        }
+
+        function calculatePricing() {
+            let monthly = 0;
+            let hasSetupFees = false;
+            let setupTotal = 0;
+            let errors = [];
+            const hasPLM = selectedPackages.plmBasic > 0 || selectedPackages.plmFull > 0;
+            const hasPLMFull = selectedPackages.plmFull > 0;
+
+            // PLM pricing
+            if (selectedPackages.plmBasic > 0) {
+                monthly += packages.plmBasic.price * selectedPackages.plmBasic;
+                setupTotal += setupFees.plmSetup * selectedPackages.plmBasic;
+                hasSetupFees = true;
+            }
+            
+            if (selectedPackages.plmFull > 0) {
+                monthly += packages.plmFull.price * selectedPackages.plmFull;
+                setupTotal += setupFees.plmSetup * selectedPackages.plmFull;
+                hasSetupFees = true;
+            }
+
+            // CRM pricing with validation
+            if (selectedPackages.crmLite > 0) {
+                if (!hasPLMFull) {
+                    errors.push(`CRM Lite (${selectedPackages.crmLite} instances) requires PLM Full`);
+                } else {
+                    monthly += packages.crmLite.price * selectedPackages.crmLite;
+                    setupTotal += setupFees.crmSetup * selectedPackages.crmLite;
+                    hasSetupFees = true;
+                }
+            }
+
+            // CRM Full standalone
+            if (selectedPackages.crmFullStandalone > 0) {
+                if (hasPLM) {
+                    errors.push(`Warning: CRM Full Standalone (${selectedPackages.crmFullStandalone} instances) is typically used without PLM. Consider CRM Lite for PLM integration.`);
+                }
+                monthly += packages.crmFullStandalone.price * selectedPackages.crmFullStandalone;
+                setupTotal += setupFees.crmSetup * selectedPackages.crmFullStandalone;
+                hasSetupFees = true;
+            }
+
+            // PM Connect pricing
+            monthly += selectedPackages.pmConnectPlus * packages.pmConnectPlus.price;
+            monthly += selectedPackages.pmConnectSelect * packages.pmConnectSelect.price;
+            monthly += selectedPackages.pmConnectModMed * packages.pmConnectModMed.price;
+
+            // Update display
+            document.getElementById('monthlyTotal').textContent = `${monthly.toLocaleString()}`;
+            document.getElementById('annualTotal').textContent = `${(monthly * 12).toLocaleString()}`;
+            
+            const setupCard = document.getElementById('setupFeesCard');
+            if (hasSetupFees) {
+                setupCard.style.display = 'block';
+                document.getElementById('setupTotal').textContent = `${setupTotal.toLocaleString()}`;
+            } else {
+                setupCard.style.display = 'none';
+            }
+
+            // Show errors
+            const errorContainer = document.getElementById('errorContainer');
+            if (errors.length > 0) {
+                errorContainer.style.display = 'block';
+                const errorClass = errors.some(e => e.includes('Warning:')) ? 'warning-box' : 'error-box';
+                errorContainer.innerHTML = `
+                    <div class="${errorClass}">
+                        <div class="error-header">
+                            <svg style="width: 16px; height: 16px; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span style="font-weight: 600;">${errors.some(e => e.includes('Warning:')) ? 'Configuration Notes:' : 'Configuration Issues:'}</span>
+                        </div>
+                        <ul class="error-list">
+                            ${errors.map(error => `<li>${error}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            } else {
+                errorContainer.style.display = 'none';
+            }
+        }
+
+        function populateClients() {
+            const currentClientsContainer = document.getElementById('currentClients');
+            currentClientsContainer.innerHTML = currentClients.map(client => `
+                <div class="client-item">
+                    <div class="client-name">${client.name}</div>
+                    <div class="client-packages">${client.packages.join(', ')}</div>
+                    ${client.note ? `<div class="client-note">${client.note}</div>` : ''}
+                    <div class="client-price">$${client.monthly}/month</div>
+                </div>
+            `).join('');
+
+            const pmConnectContainer = document.getElementById('pmConnectClients');
+            pmConnectContainer.innerHTML = pmConnectClients.map(client => `
+                <div class="client-item">
+                    <div class="client-name">${client.name}</div>
+                    <div class="client-packages">${client.description}</div>
+                    <div class="client-price purple">$250/month</div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            populateClients();
+            updateUI();
+            calculatePricing();
+            // Initialize 36-month terms checkbox
+            document.getElementById('thirtySixMonthTerms').checked = false;
+        });
+    </script>
+</body>
+</html>
